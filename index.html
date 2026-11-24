@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2a1630">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Pendo</title>
+<style>
+:root{--ink:#2a1630;--plum:#43224d;--hib:#c8325a;--mango:#f2a541;--lagoon:#1e7f7a;--sand:#f6ebdd;--card:#fffaf3;--mute:#7b6680}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--ink);color:var(--ink);display:flex;justify-content:center}
+#app{width:100%;max-width:480px;height:100dvh;background:var(--sand);display:flex;flex-direction:column;position:relative;overflow:hidden}
+@media(min-width:700px){body{align-items:center;background:radial-gradient(circle at 30% 20%,#5a2d63,#2a1630)}#app{height:min(900px,96dvh);border-radius:28px;box-shadow:0 30px 80px #0008}}
+h1,h2,h3,.brand{font-family:Georgia,"Times New Roman",serif;letter-spacing:-.01em}
+header{padding:calc(14px + env(safe-area-inset-top)) 18px 10px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:28px;font-weight:700;color:var(--hib)}
+main{flex:1;overflow-y:auto;padding:0 16px 16px}
+nav{display:flex;background:var(--ink);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
+nav button{flex:1;background:none;border:0;color:#cdb9d3;padding:10px;font-size:14px;border-radius:12px;position:relative}
+nav button.on{color:#fff;background:var(--plum)}
+nav .dot{position:absolute;top:6px;right:26%;background:var(--mango);color:var(--ink);font-size:11px;font-weight:700;border-radius:9px;padding:0 6px}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--lagoon);outline-offset:2px}
+.btn{background:var(--hib);color:#fff;border:0;border-radius:14px;padding:14px 18px;font-weight:600;width:100%}
+.btn.alt{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+.btn:disabled{opacity:.5}
+label{display:block;font-weight:600;margin:14px 0 4px}
+input,textarea,select{width:100%;font:inherit;padding:12px;border:2px solid #e3d3c2;border-radius:12px;background:#fff;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid #d9c6b2;background:#fff;border-radius:20px;padding:6px 12px;font-size:14px}
+.chip.on{background:var(--lagoon);border-color:var(--lagoon);color:#fff}
+.stack{position:relative;height:calc(100% - 96px);min-height:360px;margin-top:4px}
+.pcard{position:absolute;inset:0;border-radius:24px;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;touch-action:pan-y;user-select:none;box-shadow:0 10px 30px #2a163044;background-size:cover;background-position:center}
+.pcard .info{padding:60px 20px 20px;background:linear-gradient(transparent,#1b0b20ee)}
+.pcard h2{font-size:30px}
+.pcard .ini{position:absolute;top:18%;left:0;right:0;text-align:center;font:700 120px Georgia,serif;opacity:.35}
+.pcard .tag{display:inline-block;background:#ffffff26;border-radius:14px;padding:2px 10px;margin:6px 6px 0 0;font-size:13px}
+.stamp{position:absolute;top:24px;font:800 28px system-ui;border:4px solid;border-radius:10px;padding:2px 12px;opacity:0;transform:rotate(-12deg)}
+.stamp.l{left:20px;color:#7ff0c9;border-color:#7ff0c9}.stamp.p{right:20px;color:#ff9db5;border-color:#ff9db5;transform:rotate(12deg)}
+.actions{display:flex;justify-content:center;gap:28px;padding-top:12px}
+.round{width:62px;height:62px;border-radius:50%;border:0;font-size:26px;background:#fff;box-shadow:0 4px 14px #2a163033}
+.round.like{background:var(--hib);color:#fff}
+.row{display:flex;gap:12px;align-items:center;padding:12px;background:var(--card);border-radius:16px;margin-bottom:10px;width:100%;border:0;text-align:left;color:inherit}
+.av{width:52px;height:52px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font:700 22px Georgia,serif;background-size:cover;background-position:center}
+.mute{color:var(--mute);font-size:14px}
+.empty{text-align:center;padding:48px 20px;color:var(--mute)}
+.chat{display:flex;flex-direction:column;height:100%}
+.msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:8px 0}
+.m{max-width:78%;padding:9px 13px;border-radius:18px;background:#fff}
+.m.me{align-self:flex-end;background:var(--hib);color:#fff}
+.send{display:flex;gap:8px;padding-top:8px}.send input{flex:1}.send button{width:auto}
+.top{display:flex;align-items:center;gap:10px;padding:0 0 8px}
+.link{background:none;border:0;color:var(--hib);font-weight:600;padding:6px}
+.modal{position:absolute;inset:0;background:#2a1630f2;color:#fff;display:flex;flex-direction:column;justify-content:center;padding:28px;text-align:center;z-index:9;gap:14px}
+.modal h1{font-size:40px;color:var(--mango)}
+.modal .btn.alt{color:#fff;border-color:#fff}
+.photo{width:110px;height:110px;margin:6px auto;border-radius:50%;display:grid;place-items:center;background:#e9d9c6;background-size:cover;background-position:center;font-size:13px;color:var(--mute);border:0}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const KEY='pendo.v1';
+const INTERESTS=['Music','Football','Travel','Faith','Cooking','Business','Movies','Hiking','Fitness','Books','Dancing','Tech'];
+const SEED=[
+ {id:'p1',name:'Amina',age:27,city:'Mombasa',gender:'Woman',bio:'Beach walks, Swahili poetry and strong chai.',tags:['Books','Travel','Cooking'],hue:340,likesYou:1},
+ {id:'p2',name:'Baraka',age:30,city:'Dar es Salaam',gender:'Man',bio:'Engineer by day, taarab DJ by night.',tags:['Music','Tech','Football'],hue:200,likesYou:1},
+ {id:'p3',name:'Wanjiru',age:25,city:'Nairobi',gender:'Woman',bio:'Running my own bakery. Looking for someone kind who laughs easily.',tags:['Business','Cooking','Hiking'],hue:20,likesYou:1},
+ {id:'p4',name:'Kofi',age:32,city:'Kampala',gender:'Man',bio:'Photographer. Sunday matatu rides and long talks.',tags:['Travel','Movies','Faith'],hue:160,likesYou:0},
+ {id:'p5',name:'Zawadi',age:28,city:'Arusha',gender:'Woman',bio:'Safari guide. Ask me about the Serengeti.',tags:['Hiking','Travel','Fitness'],hue:100,likesYou:1},
+ {id:'p6',name:'Otieno',age:29,city:'Kisumu',gender:'Man',bio:'Lake sunsets, fresh tilapia, big dreams.',tags:['Business','Football','Cooking'],hue:260,likesYou:0},
+ {id:'p7',name:'Imani',age:26,city:'Kigali',gender:'Woman',bio:'Designer. Coffee snob. Dance floor regular.',tags:['Dancing','Music','Tech'],hue:300,likesYou:1},
+ {id:'p8',name:'Tumaini',age:34,city:'Nairobi',gender:'Man',bio:'Teacher and part-time gardener. Slow mornings.',tags:['Books','Faith','Hiking'],hue:50,likesYou:1}
+];
+const REPLIES=['Hey! Nice to match with you 😊','Habari! How is your week going?','Haha, tell me more!','I like that. What do you do for fun?','Sounds great. Coffee this weekend?','Karibu! Glad you wrote.'];
+let S=load(); let view='discover'; let chatWith=null; let draft={};
+function load(){try{return Object.assign({me:null,adult:false,seen:[],matches:[],chats:{},blocked:[],unread:{}},JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){return {me:null,adult:false,seen:[],matches:[],chats:{},blocked:[],unread:{}}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+const $=s=>document.querySelector(s);
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const bg=p=>p.photo?`background-image:url(${p.photo})`:`background:linear-gradient(160deg,hsl(${p.hue},65%,45%),hsl(${(p.hue+50)%360},60%,25%))`;
+const byId=id=>SEED.find(p=>p.id===id);
+function deck(){const w=S.me.interest;return SEED.filter(p=>!S.seen.includes(p.id)&&!S.blocked.includes(p.id)&&(w==='Everyone'||(w==='Women'&&p.gender==='Woman')||(w==='Men'&&p.gender==='Man')))}
+
+function render(){
+  const app=$('#app');
+  if(!S.adult){app.innerHTML=`<div class="modal"><h1 class="brand" style="color:var(--mango)">Pendo</h1><p>Meet people near you, kindly and safely.</p><p class="mute" style="color:#cdb9d3">Pendo is for adults only. Confirm you are 18 or older to continue.</p><button class="btn" id="yes">I am 18 or older</button><button class="btn alt" id="no">I am under 18</button></div>`;
+    $('#yes').onclick=()=>{S.adult=true;save();render()};$('#no').onclick=()=>{app.innerHTML='<div class="modal"><h2>Sorry, Pendo is for adults only.</h2></div>'};return}
+  if(!S.me){return renderSetup()}
+  app.innerHTML=`<header><span class="brand">Pendo</span><span class="mute">${esc(S.me.city)}</span></header><main id="main"></main>
+  <nav><button data-v="discover">Discover</button><button data-v="matches">Matches${Object.keys(S.unread).length?`<span class="dot">${Object.keys(S.unread).length}</span>`:''}</button><button data-v="me">Profile</button></nav>`;
+  document.querySelectorAll('nav button').forEach(b=>{b.classList.toggle('on',b.dataset.v===(view==='chat'?'matches':view));b.onclick=()=>{view=b.dataset.v;chatWith=null;render()}});
+  ({discover:renderDiscover,matches:renderMatches,chat:renderChat,me:renderMe})[view]();
+}
+
+function renderSetup(){
+  const d=draft;d.tags=d.tags||[];
+  $('#app').innerHTML=`<header><span class="brand">Pendo</span></header><main>
+  <h2>Create your profile</h2>
+  <button class="photo" id="ph" style="${d.photo?`background-image:url(${d.photo})`:''}" aria-label="Add photo">${d.photo?'':'Add photo'}</button><input type="file" id="file" accept="image/*" hidden>
+  <label for="n">First name</label><input id="n" maxlength="30" value="${esc(d.name||'')}">
+  <label for="a">Age (18+)</label><input id="a" type="number" min="18" max="99" value="${esc(d.age||'')}">
+  <label for="g">I am a</label><select id="g"><option>Woman</option><option>Man</option></select>
+  <label for="i">Show me</label><select id="i"><option>Everyone</option><option>Women</option><option>Men</option></select>
+  <label for="c">City</label><input id="c" maxlength="40" value="${esc(d.city||'')}" placeholder="e.g. Nairobi">
+  <label for="b">About me</label><textarea id="b" rows="3" maxlength="200">${esc(d.bio||'')}</textarea>
+  <label>Interests</label><div class="chips">${INTERESTS.map(t=>`<button type="button" class="chip ${d.tags.includes(t)?'on':''}" data-t="${t}">${t}</button>`).join('')}</div>
+  <p id="err" class="mute" style="color:var(--hib);margin-top:10px"></p>
+  <button class="btn" id="go" style="margin:12px 0 24px">Start meeting people</button></main>`;
+  $('#g').value=d.gender||'Woman';$('#i').value=d.interest||'Everyone';
+  const keep=()=>{Object.assign(d,{name:$('#n').value.trim(),age:+$('#a').value,gender:$('#g').value,interest:$('#i').value,city:$('#c').value.trim(),bio:$('#b').value.trim()})};
+  $('#ph').onclick=()=>$('#file').click();
+  $('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;keep();shrink(f,320).then(u=>{d.photo=u;renderSetup()})};
+  document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{keep();const t=c.dataset.t;d.tags=d.tags.includes(t)?d.tags.filter(x=>x!==t):[...d.tags,t].slice(0,5);renderSetup()});
+  $('#go').onclick=()=>{keep();if(!d.name)return $('#err').textContent='Enter your name.';if(!(d.age>=18))return $('#err').textContent='You must be 18 or older.';if(!d.city)return $('#err').textContent='Enter your city.';
+    S.me={...d};save();view='discover';render()};
+}
+function shrink(file,max){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.8))};im.src=r.result};r.readAsDataURL(file)})}
+
+function renderDiscover(){
+  const m=$('#main'),d=deck();
+  if(!d.length){m.innerHTML=`<div class="empty"><h2>You're all caught up</h2><p>Check back later for new people near you.</p></div>`;return}
+  const p=d[0];
+  m.style.overflow='hidden';
+  m.innerHTML=`<div class="stack"><div class="pcard" id="card" style="${bg(p)}">${p.photo?'':`<div class="ini">${esc(p.name[0])}</div>`}
+    <div class="stamp l">LIKE</div><div class="stamp p">PASS</div>
+    <div class="info"><h2>${esc(p.name)}, ${p.age}</h2><div>${esc(p.city)}</div><p style="margin:6px 0">${esc(p.bio)}</p>${p.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div></div></div>
+    <div class="actions"><button class="round" id="pass" aria-label="Pass">✕</button><button class="round like" id="like" aria-label="Like">♥</button></div>`;
+  const card=$('#card');let x0=null,dx=0;
+  card.onpointerdown=e=>{x0=e.clientX;card.setPointerCapture(e.pointerId)};
+  card.onpointermove=e=>{if(x0===null)return;dx=e.clientX-x0;card.style.transform=`translateX(${dx}px) rotate(${dx/20}deg)`;card.querySelector('.l').style.opacity=Math.max(0,dx/100);card.querySelector('.p').style.opacity=Math.max(0,-dx/100)};
+  card.onpointerup=()=>{if(x0===null)return;x0=null;if(dx>100)act(p,true);else if(dx<-100)act(p,false);else{card.style.transform='';card.querySelectorAll('.stamp').forEach(s=>s.style.opacity=0)}dx=0};
+  $('#like').onclick=()=>act(p,true);$('#pass').onclick=()=>act(p,false);
+}
+function act(p,like){
+  S.seen.push(p.id);
+  if(like&&p.likesYou){S.matches.push(p.id);S.chats[p.id]=[];save();celebrate(p);return}
+  save();renderDiscover();
+}
+function celebrate(p){
+  $('#app').insertAdjacentHTML('beforeend',`<div class="modal" id="mt"><h1>It's a match!</h1><p>You and ${esc(p.name)} liked each other.</p><button class="btn" id="say">Say hello</button><button class="btn alt" id="keep">Keep browsing</button></div>`);
+  $('#say').onclick=()=>{view='chat';chatWith=p.id;render()};$('#keep').onclick=()=>{$('#mt').remove();renderDiscover()};
+}
+function renderMatches(){
+  const m=$('#main');m.style.overflow='auto';const list=S.matches.filter(id=>!S.blocked.includes(id));
+  if(!list.length){m.innerHTML=`<div class="empty"><h2>No matches yet</h2><p>Like a few people on Discover. When they like you back, they show up here.</p></div>`;return}
+  m.innerHTML=list.map(id=>{const p=byId(id),c=S.chats[id]||[],l=c[c.length-1];return `<button class="row" data-id="${id}"><div class="av" style="${bg(p)}">${esc(p.name[0])}</div><div style="flex:1;min-width:0"><b>${esc(p.name)}</b><div class="mute" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${l?esc(l.text):'Say hello'}</div></div>${S.unread[id]?'<span class="dot" style="position:static;background:var(--mango);border-radius:9px;padding:0 7px;font-weight:700">new</span>':''}</button>`}).join('');
+  m.querySelectorAll('.row').forEach(r=>r.onclick=()=>{chatWith=r.dataset.id;view='chat';render()});
+}
+function renderChat(){
+  const p=byId(chatWith),m=$('#main');m.style.overflow='hidden';delete S.unread[chatWith];save();
+  m.innerHTML=`<div class="chat"><div class="top"><button class="link" id="back">‹ Back</button><div class="av" style="width:38px;height:38px;font-size:16px;${bg(p)}">${esc(p.name[0])}</div><b style="flex:1">${esc(p.name)}</b><button class="link" id="rep">Report</button><button class="link" id="blk">Block</button></div>
+  <div class="msgs" id="msgs"></div><form class="send" id="f"><input id="t" placeholder="Write a message" autocomplete="off" maxlength="500"><button class="btn" style="width:auto">Send</button></form></div>`;
+  const paint=()=>{$('#msgs').innerHTML=(S.chats[chatWith]||[]).map(x=>`<div class="m ${x.me?'me':''}">${esc(x.text)}</div>`).join('');$('#msgs').scrollTop=1e9};paint();
+  $('#back').onclick=()=>{view='matches';render()};
+  $('#blk').onclick=()=>{if(confirm('Block '+p.name+'? You will no longer see each other.')){S.blocked.push(p.id);save();view='matches';render()}};
+  $('#rep').onclick=()=>{if(confirm('Report '+p.name+' for inappropriate behaviour?')){alert('Thank you. Reported. In a live app this goes to your moderation team.')}};
+  $('#f').onsubmit=e=>{e.preventDefault();const v=$('#t').value.trim();if(!v)return;S.chats[chatWith].push({me:1,text:v});$('#t').value='';save();paint();
+    const id=chatWith;setTimeout(()=>{S.chats[id].push({text:REPLIES[Math.floor(Math.random()*REPLIES.length)]});if(!(view==='chat'&&chatWith===id))S.unread[id]=1;save();if(view==='chat'&&chatWith===id)paint();else render()},1200)};
+}
+function renderMe(){
+  const me=S.me,m=$('#main');m.style.overflow='auto';
+  m.innerHTML=`<div style="text-align:center"><div class="photo" style="${me.photo?`background-image:url(${me.photo})`:''}">${me.photo?'':esc(me.name[0])}</div><h2>${esc(me.name)}, ${me.age}</h2><p class="mute">${esc(me.city)}</p><p style="margin:8px 0">${esc(me.bio)}</p></div>
+  <div class="chips" style="justify-content:center;margin:8px 0 18px">${(me.tags||[]).map(t=>`<span class="chip on">${esc(t)}</span>`).join('')}</div>
+  <button class="btn alt" id="ed" style="margin-bottom:10px">Edit profile</button><button class="btn alt" id="rs" style="margin-bottom:10px">Reset swipes</button><button class="btn alt" id="del">Delete my data</button>
+  <p class="mute" style="margin-top:14px;text-align:center">Demo mode: profiles are samples and data stays on this device.</p>`;
+  $('#ed').onclick=()=>{draft={...me};S.me=null;render()};
+  $('#rs').onclick=()=>{S.seen=[];S.matches=[];S.chats={};S.unread={};save();view='discover';render()};
+  $('#del').onclick=()=>{if(confirm('Delete your profile and all data on this device?')){localStorage.removeItem(KEY);S=load();draft={};render()}};
+}
+render();
+if('serviceWorker' in navigator&&location.protocol.startsWith('http')&&location.hostname!=='localhost')navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>

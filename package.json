@@ -1,0 +1,13 @@
+{
+  "name": "pendo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:web": "mkdir -p www && cp index.html manifest.webmanifest sw.js icon-192.png icon-512.png www/"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/cli": "^7.0.0",
+    "@capacitor/core": "^7.0.0"
+  }
+}
